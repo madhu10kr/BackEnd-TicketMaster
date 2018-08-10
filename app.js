@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
+const mongoose = require('./confg/db');
 
 //middlewares
 app.use(bodyParser.json());
