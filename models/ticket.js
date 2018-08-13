@@ -30,5 +30,5 @@ const ticketSchema = mongoose.Schema({
 const Ticket = mongoose.model('Tickets',ticketSchema);//this moongoose model makes Ticket a class with ticketSchema blueprint on Tickets collection
 
 module.exports = {
-    Ticket
+    Ticket//class
 };
