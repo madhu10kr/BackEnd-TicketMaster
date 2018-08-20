@@ -82,6 +82,39 @@ app.get('/employees/:id',(req,res) => {
     }).catch(err => res.send(err));
 });
 
+app.get('/employees/:id/mobile_numbers',(req,res) => {
+    let id = req.params.id;
+    Employee.findById(id).select(['name','_id','mobileNumbers']).then(employee => {
+        if(employee){
+            res.send(employee);
+        }
+        res.send({
+            notice: 'Employess not found'
+        })
+    }).catch(err => res.send(err))
+});
+
+app.post('/employees/:id/mobile_numbers',(req,res) => {
+    let id = req.params.id;
+    let body = req.body;
+    Employee.findById(id).then(employee => {
+        if(employee){
+            let newMobile = body;
+            employee.mobileNumbers.push(body);//it is pushing from express level
+            employee.save().then(employee => {//now it is saving in db level
+                res.send({
+                    newMobile,
+                    notice:'Sucessfully created'
+                })
+            })
+        } else {
+            res.send({
+                notice:'Employee not found'
+            })
+        }
+    })
+});
+
 app.put('/employees/:id',(req,res) => {
     Employee.findByIdAndUpdate(req.params.id,{$set: req.body},{new: true}).then((employee) => {
         if(employee){
