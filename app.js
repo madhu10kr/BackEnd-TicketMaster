@@ -9,8 +9,9 @@ const { ObjectId} = require('mongodb');
 const mongoose = require('./confg/db');
 const {Ticket} = require('./models/ticket');
 
+
 const app = express();
-const port = 3000;
+const port = 3001;
 
 
 //middlewares
@@ -122,6 +123,7 @@ app.delete('/tickets/:id',(req,res) => {
         res.send(err);
     })
 });
+
 
 app.listen(port,() => {
     console.log('listening to port ',port);
