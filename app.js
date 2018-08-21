@@ -9,7 +9,7 @@ const { ObjectId} = require('mongodb');
 const mongoose = require('./confg/db');
 const {Ticket} = require('./models/ticket');
 
-const mongoose = require('./confg/db-employee');
+const mongoose1 = require('./confg/db-employee');
 const Employee = require('./models/employee');
 
 
