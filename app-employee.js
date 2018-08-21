@@ -82,6 +82,7 @@ app.get('/employees/:id',(req,res) => {
     }).catch(err => res.send(err));
 });
 
+//nested route handles
 app.get('/employees/:id/mobile_numbers',(req,res) => {
     let id = req.params.id;
     Employee.findById(id).select(['name','_id','mobileNumbers']).then(employee => {
@@ -114,6 +115,46 @@ app.post('/employees/:id/mobile_numbers',(req,res) => {
         }
     })
 });
+
+app.put('/employees/:id/mobile_numbers/:mobile_id',(req,res) => {
+    let id = req.params.id;
+    let mobileId = req.params.mobile_id;
+    let body = _.pick(req.body,['numType','mobileNumber']);
+    Employee.findById(id).then((employee) => {
+        if(employee){
+            let mobileDetails = employee.mobileNumbers.id(mobileId);
+            mobileDetails.numType = body.numType ? body.numType : mobileDetails.numType;
+            mobileDetails.mobileNumber = body.mobileNumber ? body.mobileNumber : mobileDetails.mobileNumber;
+            return employee.save()
+        }
+        res.send({
+            notice:'employee not found'
+        })
+    }).then(employee => {
+        res.send({
+            mobileNumber: employee.mobileNumbers.id(mobileId),
+            notice: 'successfully updated'
+        })
+    }).catch(err => res.send(err))
+})
+
+app.delete('/employees/:id/mobile_numbers/:mobile_id',(req,res) => {
+    let id = req.params.id;
+    let mobileId = req.params.mobile_id;
+    Employee.findById(id).then((employee) => {
+        if(employee){
+            employee.mobileNumbers.remove(mobileId);
+            return employee.save()
+        }
+        res.send({
+            notice:'employee not found'
+        })
+    }).then(employee => {
+        res.send({
+            notice: 'successfully deleted'
+        })
+    }).catch(err => res.send(err))
+})
 
 app.put('/employees/:id',(req,res) => {
     Employee.findByIdAndUpdate(req.params.id,{$set: req.body},{new: true}).then((employee) => {
