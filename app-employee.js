@@ -12,7 +12,7 @@ const Employee = require('./models/employee');
 const {employeeRouter} = require('./routes/employee-router')
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 
 //middlewares

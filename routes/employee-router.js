@@ -54,6 +54,24 @@ router.get('/:id',(req,res) => {
     }).catch(err => res.send(err));
 });
 
+router.get('/:id/shortinfo',(req,res) => {
+    Employee.findById(req.params.id).then(employee => {
+        res.send(employee.shortInfo());
+    })
+});
+
+////*********/performing instance/object method in array
+router.get('/show/short_info',(req,res) => {
+    Employee.find().then(employees => {
+        // let result =[];
+        // for(let emp of employees){
+        //     result.push(emp.shortInfo())
+        // }
+        // res.send(result);
+        res.send(employees.map(emp => emp.shortInfo()));
+    }).catch(err => res.send(err))
+});
+
 //nested route handles
 router.get('/:id/mobile_numbers',(req,res) => {
     let id = req.params.id;
@@ -87,6 +105,40 @@ router.post('/:id/mobile_numbers',(req,res) => {
         }
     })
 });
+
+
+/////custom validations on put*****
+//we have to use **runValidators
+router.put('/:id',(req,res) => {
+    let id = req.params.id;
+    let body = req.body;
+    Employee.findByIdAndUpdate(id,{ $set: body},{new:true, runValidators: true})
+    .then(employee => {
+        res.send(employee);
+    }).catch(err => res.send(err));
+})
+
+router.post('/:id/mobile_numbers',(req,res) =>{
+    let id = req.params.id;
+    let body = _.pick(req.body,['numType','mobileNumber']);
+
+    Employee.findById(id).then(employee => {
+        
+        if(employee){
+            employee.mobileNumbers.push(body);
+            return employee.save()
+        }
+        res.send({
+            notice:'employee not found'
+        })
+    }).then(employee => {
+        res.send({
+            mobileNumber: employee.mobileNumbers,
+            notice: 'successfully updated'
+        })
+    }).catch(err => res.send(err))
+})
+
 
 router.put('/:id/mobile_numbers/:mobile_id',(req,res) => {
     let id = req.params.id;

@@ -24,7 +24,19 @@ router.post('/',(req,res) => {
     .catch((err) => {
         res.send(err);
     })
+})
+
+router.get('/status/open',(req,res) => {
+    Ticket.openTickets().then(ticket => res.send(ticket));
 });
+
+router.get('/status/completed',(req,res) => {
+    Ticket.completedTickets().then(ticket => res.send(ticket));
+});
+
+router.get('/priority/:value',(req,res) => {
+    Ticket.findByPriority(req.params.value).then(ticket => res.send(ticket));
+})
 
 router.get('/:id',(req,res) => {
     //it is checking for valid id or not
