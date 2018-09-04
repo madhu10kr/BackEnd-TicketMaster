@@ -68,6 +68,7 @@ router.put('/:id',(req,res) => {
     let body = _.pick(req.body,['name','department','message','priority','status']);
     //findByIdAndUpdate takes 3 arguments(id,{$set: },{new: })
     //$set: is an operator for updating new fields also
+    //$push: it is same as $set but here we are pushing 
     //new: is used to get updated object
     Ticket.findByIdAndUpdate(req.params.id,{ $set: body},{ new: true})
     .then((ticket) => {

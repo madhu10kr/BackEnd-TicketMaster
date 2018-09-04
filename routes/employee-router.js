@@ -178,7 +178,25 @@ router.delete('/:id/mobile_numbers/:mobile_id',(req,res) => {
             notice: 'successfully deleted'
         })
     }).catch(err => res.send(err))
-})
+});
+
+// router.delete('/:id/mobile_numbers/:moble_number',(req,res) => {
+//     let id = req.params.id;
+//     let num = req.params.mobile_number;
+//     Employee.findById(id).then((employee) => {
+//         if(employee){
+//             employee.mobileNumbers.remove(num);
+//             return employee.save()
+//         }
+//         res.send({
+//             notice:'employee not found'
+//         })
+//     }).then(employee => {
+//         res.send({
+//             notice: 'successfully deleted'
+//         })
+//     }).catch(err => res.send(err))
+// });
 
 router.put('/:id',(req,res) => {
     Employee.findByIdAndUpdate(req.params.id,{$set: req.body},{new: true}).then((employee) => {
