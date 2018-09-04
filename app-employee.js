@@ -9,7 +9,11 @@ const { ObjectId} = require('mongodb');
 const mongoose = require('./confg/db-employee');
 
 const Employee = require('./models/employee');
-const {employeeRouter} = require('./routes/employee-router')
+const {employeeRouter} = require('./routes/employee-router');
+
+//user router
+const {usersRouter} = require('./routes/user');
+
 
 const app = express();
 const port = 3000;
@@ -29,6 +33,7 @@ app.param('id',(req,res,next) => {
     
 });
 app.use('/employees',employeeRouter);
+app.use('/users',usersRouter);
 
 
 

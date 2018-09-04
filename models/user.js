@@ -2,11 +2,14 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const Schema = mongoose.Schema;
 
+const _ = require('lodash');
+const jwt = require('jsonwebtoken');
+
 const userSchema = new Schema ({
     userName: {
         type: String,
-        minlength: 6,
         trim: true,
+        unique: true,
         required: true
     },
     email: {
@@ -28,7 +31,7 @@ const userSchema = new Schema ({
         type: String,
         required: true,
         validate: function(value){
-            return validator.isNumeric(value) && validator.isLength(10);
+            return validator.isNumeric(value) && validator.isLength(value,{min:10,max:10});//is numeric takes numbers in strings
         },
         message: 'should be 10 digits'
     },
@@ -45,6 +48,29 @@ const userSchema = new Schema ({
         
     }]
 });
+
+//toJSON method is a inbuilt method, we are overriding the inbuit method
+//it is a instance/obj method
+//we are picking only required vlaues to send the data when we send data while instance promises(user.save() ...)
+
+userSchema.methods.toJSON = function() {
+    return _.pick(this,['userName','email','mobile','_id']);
+};
+
+//instance method
+userSchema.methods.generateToken = function(){
+    let tokenData = {
+        _id : this._id
+    };
+    let generatedTokenInfo = {
+        access : 'auth',
+        token : jwt.sign(tokenData,'supersecret')//using jwt we are encoding the tokenData
+    }
+    this.tokens.push(generatedTokenInfo);
+    return this.save().then((user) => {
+        return generatedTokenInfo.token;
+    });
+}
 
 const User = mongoose.model('User',userSchema);
 
