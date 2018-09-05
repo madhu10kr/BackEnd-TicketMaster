@@ -5,8 +5,9 @@ const {Ticket} = require('../models/ticket');
 const router = express.Router();
 
 const _ = require('lodash');
+const {authencicateUser} = require('../middlewares/authentication');
 
-router.get('/',(req,res) => {
+router.get('/',authencicateUser,(req,res) => {
     Ticket.find().then((tickets) => {
         res.send(tickets);
     })

@@ -70,6 +70,24 @@ userSchema.methods.generateToken = function(){
     return this.save().then((user) => {
         return generatedTokenInfo.token;
     });
+};
+
+//we are verifying the tokens by decoding
+userSchema.statics.findByToken = function(token) {
+    let tokenData;
+    try{
+        tokenData = jwt.verify(token,'supersecret');
+    } catch(e) {
+        // return new Promise((resolve,reject) => {
+        //     reject(e);
+        // })
+        return Promise.reject(e);
+    }
+
+    return this.findOne({
+        '_id': tokenData._id,
+        'tokens.token': token
+    })
 }
 
 const User = mongoose.model('User',userSchema);
