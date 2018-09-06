@@ -19,6 +19,7 @@ router.get('/',authencicateUser,(req,res) => {
 router.post('/',authencicateUser,(req,res) => {
     let body = _.pick(req.body,['name','department','message','priority']);
     let ticket = new Ticket(body);//req.body is an obj
+    //console.log(req.locals.user)
     ticket.user = req.locals.user._id;
     ticket.save().then((ticket) => {
         res.send(ticket);

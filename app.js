@@ -9,6 +9,15 @@ const { ObjectId} = require('mongodb');
 const mongoose = require('./confg/db');
 const {Ticket} = require('./models/ticket');
 
+const Employee = require('./models/employee');
+
+const {User} = require('./models/user')
+const {employeeRouter} = require('./routes/employee-router');
+
+//user router
+
+const {usersRouter} = require('./routes/user');
+
 
 
 const {ticketRouter} = require('./routes/ticket-router')
@@ -16,7 +25,7 @@ const {ticketRouter} = require('./routes/ticket-router')
 
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 
 //middlewares
@@ -36,6 +45,8 @@ app.param('id',(req,res,next) => {
 });
 
 app.use('/tickets',ticketRouter);
+app.use('/employees',employeeRouter);
+app.use('/users',usersRouter);
 
 
 
