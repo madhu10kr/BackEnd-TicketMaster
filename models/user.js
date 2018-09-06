@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 
+const bcrypt = require('bcryptjs');
+
 const userSchema = new Schema ({
     userName: {
         type: String,
@@ -88,7 +90,21 @@ userSchema.statics.findByToken = function(token) {
         '_id': tokenData._id,
         'tokens.token': token
     })
-}
+};
+
+//hashing the password before saving
+userSchema.pre('save',function(next) {
+    if(this.isModified('password')) {
+        bcrypt.genSalt(10).then(salt => {
+            bcrypt.hash(this.password,salt).then(hashedPassword => {
+                this.password = hashedPassword;
+                next();
+            });
+        });
+    } else {
+        next();
+    }
+})
 
 const User = mongoose.model('User',userSchema);
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const ticketSchema = mongoose.Schema({
+const ticketSchema = new Schema({
     name:{
         type: String,
         required: true
@@ -27,6 +28,14 @@ const ticketSchema = mongoose.Schema({
     createdAt:{
         type: Date,
         dafault: Date.now
+    },
+    employee: {
+        type: Schema.Types.ObjectId,
+        ref: 'employee'
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
