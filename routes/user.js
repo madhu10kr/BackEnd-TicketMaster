@@ -30,8 +30,19 @@ router.get('/',(req,res) => {
 
 router.get('/profile',authencicateUser,(req,res) => {
     //req.locals
-    res.send(req.locals.user);
+    res.send(req.locals.user.tokens[0].token);
 });
+
+//sign in//we are posting because of we can access to req.body
+router.post('/login',(req,res) => {
+    let body = _.pick(req.body,['email','password']);
+    User.findByEmailAndPassword(body.email,body.password).then(user => {
+        return user.generateToken().then(token => {
+            res.header('x-auth',token).send();
+        })
+    }).catch(err => res.send(err))
+});
+
 
 router.post('/',(req,res) => {
     let body =  _.pick(req.body,['userName','email','mobile','password']);
@@ -42,6 +53,15 @@ router.post('/',(req,res) => {
         res.header('x-auth',token).send(user);//we are passing token data in header//x-auth is a key/parameter
 
     }).catch((err) => res.send(err));
+});
+
+
+//logout route
+
+router.delete('/logout',authencicateUser,(req,res) => {
+    req.locals.user.deleteToken(req.locals.token).then(() =>{
+        res.send();
+    }).catch(err => console.log(err))
 });
 
 module.exports = {
