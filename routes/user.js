@@ -43,7 +43,7 @@ router.post('/login',(req,res) => {
     }).catch(err => res.send(err))
 });
 
-
+//sign up
 router.post('/',(req,res) => {
     let body =  _.pick(req.body,['userName','email','mobile','password']);
     let user = new User(body);
@@ -62,6 +62,9 @@ router.delete('/logout',authencicateUser,(req,res) => {
     req.locals.user.deleteToken(req.locals.token).then(() =>{
         res.send();
     }).catch(err => console.log(err))
+    // User.findOneAndUpdate({_id:req.locals.user._id},{$pull: {tokens:req.locals.token}}, { new: true }).then(data => {
+    //     res.send(data)
+    //   }).catch(err => res.send(err));
 });
 
 module.exports = {
